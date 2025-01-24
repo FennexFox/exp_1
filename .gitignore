@@ -1,2 +1,4 @@
 data/tf_flowers/3.0.1/*
 *.pyc
+*.jupyter_ystore.db
+*checkpoint.ipynb
