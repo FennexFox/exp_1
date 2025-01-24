@@ -37,6 +37,7 @@ def plot_prediction(model, test, batch_size = 32):
     row_num = batch_size // 8 + 1
     dis = plt.figure(figsize=(15, 2 * (row_num)))
     
+    correct_count = 0
     for idx, (image, label, prdiction) in enumerate(zip(images, labels, predictions)):
         ax = dis.add_subplot(row_num, 8, idx + 1)
         image = (image + 1) / 2
@@ -49,7 +50,9 @@ def plot_prediction(model, test, batch_size = 32):
             ax.set_title(title, fontdict={'fontsize': 8, 'color': 'red'})
         else:
             ax.set_title(title, fontdict={'fontsize': 8, 'color': 'green'})
+            correct_count += 1
 
         plt.axis('off')
     
     plt.show()
+    print(f'Correct Count: {correct_count}/{batch_size}')
