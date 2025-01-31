@@ -1,5 +1,6 @@
 data/tf_flowers/3.0.1/*
 *.pyc
 *.zip
+*.Identifier
 *.jupyter_ystore.db
 *checkpoint.ipynb
