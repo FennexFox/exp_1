@@ -31,11 +31,11 @@ def get_batches(train_ds, val_ds, test_ds, batch_size = 64):
 
     return train_ds, val_ds, test_ds
 
-def load_datasets_from_directory(base_dir, image_size = (224, 224), batch_size = 64, val_split = 0.4):
+def load_datasets_from_directory(base_dir, image_size = (224, 224), batch_size = 64, val_split = 0.2, normalize = False):
     if not pathlib.Path(f"{base_dir}").exists():
         raise ValueError(f"Directory {base_dir} does not exist")
         
-    dataset = keras.utils.image_dataset_from_directory(
+    train_dataset, val_dataset = keras.utils.image_dataset_from_directory(
         pathlib.Path(f"{base_dir}"),
         validation_split=val_split,
         subset="both",
@@ -46,13 +46,13 @@ def load_datasets_from_directory(base_dir, image_size = (224, 224), batch_size =
     )
     
     # Normalize images to [-1, 1] range
-    normalization_layer = tf.keras.layers.Rescaling(scale=1./127.5, offset=-1)
-    
-    train_dataset = dataset[0].map(lambda x, y: (normalization_layer(x), y))
+    if normalize:
+        normalization_layer = tf.keras.layers.Rescaling(scale=1./127.5, offset=-1)
+        train_dataset = train_dataset.map(lambda x, y: (normalization_layer(x), y))
+        val_dataset = val_dataset.map(lambda x, y: (normalization_layer(x), y))
 
-    # Split validation dataset into validation and test sets
-    val_batches = len(dataset[1]) // 2
-    val_dataset = dataset[1].take(val_batches).map(lambda x, y: (normalization_layer(x), y))
-    test_dataset = dataset[1].skip(val_batches).map(lambda x, y: (normalization_layer(x), y))
+    val_batches = len(val_dataset) // 2
+    val_dataset = val_dataset.take(val_batches)
+    test_dataset = val_dataset.skip(val_batches)
     
     return train_dataset, val_dataset, test_dataset
