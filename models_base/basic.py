@@ -1,21 +1,34 @@
-import tensorflow as tf
+import tensorflow as tf, keras
 from keras import models, layers
 
-def simple1(learning_rate=1e-3):
+def base_simple1():
     model = models.Sequential([
-    layers.Conv2D(16, (3, 3), padding = 'same', activation='relu', input_shape=(240, 240, 3)),
+    layers.Conv2D(16, (3, 3), padding = 'same', activation='relu'),
     layers.MaxPooling2D(pool_size=(2, 2)),
     layers.Conv2D(32, (3, 3), padding = 'same', activation='relu'),
     layers.MaxPooling2D(pool_size=(2, 2)),
     layers.Conv2D(64, (3, 3), padding = 'same', activation='relu'),
     layers.MaxPooling2D(pool_size=(2, 2)),
-    layers.GlobalAveragePooling2D(),
-    layers.Dense(512, activation='relu'),
-    layers.Dense(5, activation='softmax')  
     ])
     
-    model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=learning_rate),
-              loss=tf.keras.losses.sparse_categorical_crossentropy,
-              metrics=['accuracy'])
+    model.name = "base_simple1"
     
     return model
+
+def base_simple2(input_shape = (480, 480, 3)):
+    
+    input = keras.Input(shape=input_shape)
+    features = input
+    
+    for i in range(5):
+        features = layers.Conv2D(2 ** (i + 4), (3, 3), padding = 'same', activation='relu')(features)
+        features = layers.MaxPooling2D(pool_size=(2, 2))(features)
+        
+    output = features
+        
+    model = models.Model(inputs=input, outputs=output)
+    model.name = "base_simple2"
+    
+    return model
+    
+    

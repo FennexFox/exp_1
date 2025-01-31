@@ -1,12 +1,12 @@
 import keras
 
-def VGG16(image_shape=(224, 224, 3), trainable=False):
-    efficientNetV2L = keras.applications.VGG16(
+def VGG16(image_shape=(224, 224, 3), top=False, trainable=False):
+    model = keras.applications.VGG16(
         weights='imagenet',
-        include_top=False,
+        include_top=top,
         input_shape=image_shape
     )
     
-    efficientNetV2L.trainable = trainable
+    model.trainable = trainable
     
-    return efficientNetV2L
+    return model

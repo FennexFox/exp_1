@@ -1,12 +1,12 @@
 import keras
 
-def EV2L(image_shape=(480, 480, 3), trainable=False):
-    efficientNetV2L = keras.applications.EfficientNetV2L(
+def EV2L(image_shape=(480, 480, 3), top=False, trainable=False):
+    model = keras.applications.EfficientNetV2L(
         weights='imagenet',
-        include_top=False,
+        include_top=top,
         input_shape=image_shape
     )
     
-    efficientNetV2L.trainable = trainable
+    model.trainable = trainable
     
-    return efficientNetV2L
+    return model
