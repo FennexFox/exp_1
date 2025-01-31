@@ -45,11 +45,14 @@ def load_datasets_from_directory(base_dir, image_size = (224, 224), batch_size =
         label_mode='categorical'
     )
     
-    train_dataset = dataset[0]
+    # Normalize images to [-1, 1] range
+    normalization_layer = tf.keras.layers.Rescaling(scale=1./127.5, offset=-1)
+    
+    train_dataset = dataset[0].map(lambda x, y: (normalization_layer(x), y))
 
     # Split validation dataset into validation and test sets
     val_batches = len(dataset[1]) // 2
-    val_dataset = dataset[1].take(val_batches)
-    test_dataset = dataset[1].skip(val_batches)
+    val_dataset = dataset[1].take(val_batches).map(lambda x, y: (normalization_layer(x), y))
+    test_dataset = dataset[1].skip(val_batches).map(lambda x, y: (normalization_layer(x), y))
     
     return train_dataset, val_dataset, test_dataset
