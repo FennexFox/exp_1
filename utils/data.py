@@ -23,8 +23,9 @@ def resize_and_rescale(image, label, size = (224, 224)):
     image = image / 127.5 - 1
     return image, label
 
-def get_batches(train_ds, val_ds, suffle_buffer = 1024, batch_size = 64):
-    train_ds = train_ds.shuffle(suffle_buffer).batch(batch_size)
+def get_batches(train_ds, val_ds, test_ds, batch_size = 64):
+    train_ds = train_ds.batch(batch_size)
     val_ds = val_ds.batch(batch_size)
+    test_ds = test_ds.batch(batch_size)
 
-    return train_ds, val_ds
+    return train_ds, val_ds, test_ds
